@@ -1,9 +1,9 @@
-from typing import List, Callable, Tuple
+from typing import List, Tuple
 from tqdm import tqdm
 from torchmetrics import Accuracy
 from torch.utils.data import DataLoader
-from torch import nn
-from torch import optim
+from torch import nn, optim
+from .callback.Callback import Callback
 from .LearnGraph import LearnGraph
 
 
@@ -18,7 +18,7 @@ class Learning():
         self._loss = None
         # Các hàm được gọi trong quá trình tối ưu (chẳng hạn như checkpoint ...)
         # Quá trình phụ
-        self._callbacks : List[Callable] = []
+        self._callbacks : List[Callback] = []
 
     def set_optimizer(self, optimizer : optim.Optimizer, *args, **kwargs):
         self._optimizer = optimizer(self._target.parameters(), *args, **kwargs)
@@ -28,14 +28,19 @@ class Learning():
         self._target = self._target.to(_device)
 
     def set(self, loss, optimizer, accuracy : Accuracy = None, 
-        device : str = "device", *args ,**kwargs):
-        self._loss = loss
+        device : str = "device", callbacks : List[Callback] = [], *args ,**kwargs):
         if not accuracy is None:
             accuracy = accuracy.to(device)
         self._accuracy = accuracy
+        self._loss = loss
         self.set_optimizer(optimizer, *args, **kwargs)
         self.set_device(device)
-    
+
+        for callback in callbacks:
+            if not isinstance(callback, Callback):
+                raise ValueError("Hàm gọi lại không phải lớp con của Callback")
+        self._callbacks = callbacks
+
     def __optimize(self, y, y_hat):
         self._optimizer.zero_grad()
         l = self._loss(y_hat, y)
@@ -90,6 +95,7 @@ class Learning():
         self.show_infor()
 
         infor = []
+
         self._target = self._target.train()
         for e in range(1, epochs + 1):
             train_loss, train_acc = self.train(train, show_progress)
@@ -98,8 +104,13 @@ class Learning():
                 val_loss, val_acc = self.valid(val)
             if show_progress:
                 self.show_epoch(e, (train_loss, train_acc), (val_loss, val_acc))
-            infor.append((train_loss, train_acc, val_loss, val_acc))
-        
+            _tmp = (train_loss, train_acc, val_loss, val_acc)
+            # Hàm gọi lại cho lưu trữ thông tin bổ sung
+            for callback in self._callbacks:
+                callback(*_tmp)
+            infor.append(_tmp)
+        self._target = self._target.eval()
+
         return infor
 
     def show_infor(self):
