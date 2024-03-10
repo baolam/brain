@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from torch import nn
+from torch import nn, no_grad
 
 from graph.Graph import Graph
 from units.Dictionary import Dictionary
@@ -30,3 +30,7 @@ class LearnGraph(ForwardGraph, nn.Module):
         for unit in self._units.alls():
             learnable[unit.name()] = self._learnable(unit.learnable())
         return learnable
+    
+    def forward_no_grad(self, x):
+        with no_grad():
+            return self.forward(x)
