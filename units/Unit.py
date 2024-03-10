@@ -35,7 +35,7 @@ class Unit(ABC, nn.Module):
     def learnable(self):
         return self.__learnable
     
-    def learnability(self, learnable : bool):
+    def set_learn(self, learnable : bool):
         if self.learnable() == learnable:
             return
         self = self.requires_grad_(learnable)

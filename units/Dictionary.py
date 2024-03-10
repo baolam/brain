@@ -101,3 +101,11 @@ class Dictionary(nn.Module):
                 layers[layer] = NoDuplicateArray()
             layers[layer].add(addr)
         return layers
+    
+    def alls(self, return_addr : bool = False):
+        '''
+        Trả về toàn bộ đơn vị trong từ điển
+        '''
+        if return_addr:
+            return list(self.__units.keys())
+        return list(self.__units.values())
