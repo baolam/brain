@@ -1,6 +1,7 @@
 from typing import Tuple
 from abc import ABC, abstractmethod
 from torch import nn
+from torch import Tensor
 
 
 class Unit(ABC, nn.Module):
@@ -63,4 +64,10 @@ class Unit(ABC, nn.Module):
     
     @abstractmethod
     def forward(self):
+        pass
+
+    def recv(self, x : Tensor):
+        pass
+
+    def send(self):
         pass

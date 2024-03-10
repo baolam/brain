@@ -2,15 +2,21 @@ from typing import Dict, Tuple, List
 from torch import nn
 from .Unit import Unit
 from ..utils.address import SPLIT_CHAR
+from ..utils.array import NoDuplicateArray
+
 
 class Dictionary(nn.Module):
-    def __init__(self):
+    def __init__(self, units : Dict[str, Unit]):
         '''
         Khởi tạo của Dictionary. Đóng vai trò quản lí các unit.
         Là một tập hợp bao gồm các Unit.
         '''
         super().__init__()
-        self.__units : Dict[str, Unit] = nn.ModuleDict()
+        self.__lock = False
+        if units is None:
+            self.__lock = True
+
+        self.__units : Dict[str, Unit] = nn.ModuleDict(units)
     
     def exist(self, _unit : Tuple[Unit, str]):
         addr = _unit
@@ -25,6 +31,8 @@ class Dictionary(nn.Module):
 
     def add(self, unit : Unit):
         assert isinstance(unit, Unit), "Không thể thêm đơn vị không kế thừa từ lớp Unit"
+        if self.__lock:
+            raise ValueError("Chức năng thêm đã bị khóa!")
         if self.exist(unit):
             raise ValueError("{} đã tồn tại. Không thể thêm!".format(unit.show_infor()))
         self.__units[unit.name()] = unit 
@@ -35,6 +43,8 @@ class Dictionary(nn.Module):
             addr = unit.name()
         if not self.exist(addr):
             raise ValueError("Đơn vị với địa chỉ {} không được quản lí!".format(addr))
+        if self.__lock:
+            raise ValueError("Chức năng xóa đã bị khóa!")
         self.__units.pop(addr)
 
     def __bsearch_counter(self, counter : int, address : List[str]):
@@ -79,3 +89,15 @@ class Dictionary(nn.Module):
         Trả về toàn bộ địa chỉ của các unit được sắp xếp theo thứ tự tăng dần
         '''
         return list(self.__units.keys()).sort()
+
+    def layers(self) -> Dict[str, NoDuplicateArray]:
+        '''
+        Hàm trả về các lớp của từ điển
+        '''
+        layers = {  }
+        for addr, unit in self.__units.items():
+            layer = unit.layer()
+            if layers.get(layer) is None:
+                layers[layer] = NoDuplicateArray()
+            layers[layer].add(addr)
+        return layers
