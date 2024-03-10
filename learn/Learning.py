@@ -107,7 +107,7 @@ class Learning():
             _tmp = (train_loss, train_acc, val_loss, val_acc)
             # Hàm gọi lại cho lưu trữ thông tin bổ sung
             for callback in self._callbacks:
-                callback(*_tmp)
+                callback(*_tmp, epoch=e)
             infor.append(_tmp)
         self._target = self._target.eval()
 
