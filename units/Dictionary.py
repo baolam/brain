@@ -71,7 +71,7 @@ class Dictionary(nn.Module):
         return self.__units[address[index]]
 
     def __from_address(self, addr : str):
-        if not self.__from_address(addr):
+        if not self.exist(addr):
             raise ValueError("{} không trong quản lí!".format(addr))
         return self.__units[addr]
 
