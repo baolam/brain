@@ -67,20 +67,20 @@ class Unit(ABC, nn.Module):
         pass
     
     @abstractmethod
-    def recv(self, x : Tensor, _from : str = None):
+    def recv(self, x : Tensor, _from : str = None, *args, **kwargs):
         pass
 
     @abstractmethod
-    def feature(self):
+    def feature(self, *args, **kwargs):
         '''
         Trả về đặc trưng đầu vào của đơn vị
         '''
         pass
     
     @abstractmethod
-    def send(self):
+    def send(self, *args, **kwargs):
         pass
     
     @abstractmethod
-    def clear_feature(self):
+    def clear_feature(self, *args, **kwargs):
         pass

@@ -10,34 +10,27 @@ class CombineUnit(Unit, ABC):
     def __init__(self, addr: Tuple[str, None], **kwargs):
         super().__init__(addr, LAYER, **kwargs)
 
-    @abstractmethod
-    def forward(self):
+    def send(self, *args, **kwargs):
         pass
-
-    def send(self):
-        pass
-
 
 class ConcatFeature(CombineUnit):
     def __init__(self, addr: Tuple[str | None], **kwargs):
         super().__init__(addr, **kwargs)
         self.__feature : Dict[str, Tensor] = {  }
 
-    def recv(self, x: Tensor, _from: str = None):
+    def recv(self, x: Tensor, idx : int = None, *args, **kwargs):
         # Làm sao quyết định vị trí của đặc trưng?
-        if _from is None:
-            raise ValueError("Không chỉ rõ đơn vị đầu vào!")
-        if not self.__feature.get(_from) is None:
-            raise ValueError("Đặc trưng đã tồn tại!")
-        self.__feature[_from] = x
+        if idx is None:
+            raise ValueError("Không có chỉ số khoảng!")
+        self.__feature[str(idx)] = x
 
-    def forward(self):
+    def forward(self, *args, **kwargs) -> Tensor:
+        pass
+    
+    def feature(self, *args, **kwargs):
         pass
 
-    def feature(self):
-        pass
-
-    def clear_feature(self):
+    def clear_feature(self, *args, **kwargs):
         self.__feature.clear()
 
 
@@ -53,7 +46,7 @@ class MeanFeatureWithoutAdaptive(CombineUnit):
         x = x.mean(dim = 1)
         return x
 
-    def recv(self, x: Tensor, _from: str = None):
+    def recv(self, x: Tensor, _from: str = None, *args, **kwargs):
         self.__feature.append(x)
     
     def clear_feature(self):
