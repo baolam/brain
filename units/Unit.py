@@ -63,11 +63,24 @@ class Unit(ABC, nn.Module):
         return self.__params(trainable=True)
     
     @abstractmethod
-    def forward(self):
+    def forward(self, *args, **kwargs) -> Tensor:
+        pass
+    
+    @abstractmethod
+    def recv(self, x : Tensor, _from : str = None):
         pass
 
-    def recv(self, x : Tensor):
+    @abstractmethod
+    def feature(self):
+        '''
+        Trả về đặc trưng đầu vào của đơn vị
+        '''
         pass
-
+    
+    @abstractmethod
     def send(self):
+        pass
+    
+    @abstractmethod
+    def clear_feature(self):
         pass

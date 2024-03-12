@@ -1,3 +1,4 @@
+import os
 from . import parser
 from . import STORAGE, VERSION
 
