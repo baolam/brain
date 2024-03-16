@@ -1,21 +1,36 @@
 from abc import ABC, abstractmethod
 from typing import Tuple
+
+from torch import Tensor
 from . import Unit
 
-LAYER = "represent"
 
-class AutoRepresent(Unit, ABC):
+class AutoRepresent(Unit):
+    LAYER = "represent"
     # Biểu diễn tự động (tự tối ưu)
 
     def __init__(self, addr: Tuple[str, None], **kwargs):
-        super().__init__(addr, LAYER, **kwargs)
+        super().__init__(addr, self.LAYER, **kwargs)
+
+    def send(self, *args, **kwargs):
+        pass
+
+    def recv(self, x: Tensor, _from: str = None, *args, **kwargs):
+        pass
+
+    def feature(self, *args, **kwargs):
+        pass
+
+    def clear_feature(self, *args, **kwargs):
+        pass
 
 
 class CodingRepresent(Unit, ABC):
-    # Biểu diễn dựa vào đặc trưng được trích xuất
+    LAYER = "represent"
+    # Biểu diễn dựa vào đặc trưng được trích xuất thủ công
 
     def __init__(self, addr: Tuple[str | None], **kwargs):
-        super().__init__(addr, LAYER, **kwargs)
+        super().__init__(addr, self.LAYER, **kwargs)
 
     @abstractmethod
     def extractor(self, x):
