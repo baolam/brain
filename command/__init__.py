@@ -23,3 +23,7 @@ if not os.path.exists(S_UNIT):
 S_MODEL = "{}/models".format(STORAGE)
 if not os.path.exists(S_MODEL):
     os.makedirs(S_MODEL)
+
+S_MANAGE = "{}/management".format(STORAGE)
+if not os.path.exists(S_MANAGE):
+    os.makedirs(S_MANAGE)

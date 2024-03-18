@@ -1,9 +1,10 @@
 import torch
+import json
 from uuid import uuid4
 from torch import load, save
 from typing import Tuple
 
-from .command import S_UNIT, S_MODEL, DIM
+from .command import S_UNIT, S_MODEL, DIM, S_MANAGE
 from .utils import *
 from .visitor import *
 from .units import *
@@ -22,10 +23,22 @@ def get_cls(cls_name):
 def __save_unit(unit : Unit):
     save(S_UNIT + '/' + unit.name() + '.pt', unit)
 
+def __save_graph(graph : Graph, name : str):
+    edges = graph.edges()
+    cls = graph.__class__.__name__
+    infor = {
+        "edges" : edges,
+        "class_name" : cls
+    }
+    json.dump(infor, S_MANAGE + '/' + name + '.json')    
+
 def __save_model(model : Graph, name : str):
     if name is None:
         name = str(uuid4())
     save(S_MODEL + '/' + name + '.pt', model)
+    for unit_addr in model._units.address():
+        __save_unit(model._units.get(unit_addr))
+    __save_graph(model, name)
 
 def save(obj : Tuple[Unit, Graph], name : str = None):
     if isinstance(obj, Unit):

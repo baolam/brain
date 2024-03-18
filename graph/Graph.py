@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, Dict
+from typing import Tuple, Dict, List
 
 from ..units.Dictionary import Dictionary
 from ..utils.array import NoDuplicateArray
@@ -53,6 +53,15 @@ class Graph(ABC):
         _from = self.__address(_from)
         _to = self.__address(_to)
         self._edges[_from].delete(_to)
+
+    def edges(self) -> Dict[str, List[str]]:
+        '''
+        Trả về tập danh sách cạnh của đồ thi
+        '''
+        data = {  }
+        for unit, neighbor in self._edges.items():
+            data[unit] = neighbor.content()
+        return data
 
     @abstractmethod
     def forward(self):

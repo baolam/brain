@@ -8,5 +8,8 @@
     },
     "dataset_folder" : "",
     "model" : "",
-    "valid_size" : 0.2
+    "valid_size" : 0.2,
+    "callbacks" : [],
+    "accuracy" : "",
+    "device" : ""
 }
