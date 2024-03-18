@@ -1,0 +1,11 @@
+{
+    "epoch" : 10,
+    "batch_size" : 64, 
+    "loss" : "bceloss",
+    "optimizer" : {
+        "class" : "adam",
+        "learning_rate" : 0.01
+    },
+    "dataset_folder" : "",
+    "model" : ""
+}

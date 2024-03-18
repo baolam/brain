@@ -4,9 +4,22 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 parser = argparse.ArgumentParser()
-path = Path("../env")
-load_dotenv(path)
+# path = Path("E:\\my_research\\brain\\.env")
+# load_dotenv(path)
+load_dotenv()
 
 VERSION = os.getenv("VERSION")
-STORAGE = os.getenv("STORAGE")
 DIM = int(os.getenv("DIM"))
+
+STORAGE = os.getenv("STORAGE_FOLDER")
+if not os.path.exists(STORAGE):
+    os.makedirs(STORAGE)
+
+# Một số biến dùng để lưu trữ khác
+S_UNIT = "{}/units".format(STORAGE)
+if not os.path.exists(S_UNIT):
+    os.makedirs(S_UNIT)
+
+S_MODEL = "{}/models".format(STORAGE)
+if not os.path.exists(S_MODEL):
+    os.makedirs(S_MODEL)
