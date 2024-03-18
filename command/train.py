@@ -1,6 +1,7 @@
 import os
 import json
-from .. import load_model
+
+from .. import load_model, get_cls
 from ..learn import Learning
 from . import parser
 
@@ -14,12 +15,9 @@ tmp.add_argument("--dataset_folder", help="Thư mục lưu trữ dữ liệu hu�
 tmp.add_argument("--train_file", help="File lưu trữ các thông tin huấn luyện", type=str, default=None)
 tmp.add_argument("--model", help="File chứa mô hình huấn luyện", type=str)
 
-# Cài đặt huấn luyện từ một file
-# Cấu trúc một lệnh train
-# Bộ dataset?
-# Split ra sao?
-# Batch_size?
-# Hàm chọn độ chính xác?
+def __build(cls, *args, **kwargs):
+    obj = get_cls(cls)(*args, **kwargs)
+    return obj
 
 def __load_from_file(file, args):
     ext = file.split('.')[1]
@@ -49,5 +47,9 @@ def train(args):
         model = load_model(tmp.model)
         learning = Learning(model)
         learning.set(
-            tmp.loss, tmp.optimizer, tmp.accuracy, tmp.device, tmp.callbacks
+            __build(tmp.loss), 
+            __build(tmp.optimizer.cls, **tmp.optimizer), 
+            __build(tmp.accuracy.cls, **tmp.accuracy), 
+            tmp.device, 
+            tmp.callbacks
         )

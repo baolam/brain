@@ -3,13 +3,15 @@
     "batch_size" : 64, 
     "loss" : "bceloss",
     "optimizer" : {
-        "class" : "adam",
+        "cls" : "adam",
         "learning_rate" : 0.01
     },
     "dataset_folder" : "",
     "model" : "",
     "valid_size" : 0.2,
     "callbacks" : [],
-    "accuracy" : "",
+    "accuracy" : {
+        "..."
+    },
     "device" : ""
 }
