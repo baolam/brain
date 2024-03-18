@@ -1,9 +1,14 @@
 import torch
+import torchmetrics
+
 import json
 from uuid import uuid4
 from torch import load, save
 from typing import Tuple
 
+from torch.nn import *
+from torch.optim import *
+from torchmetrics import Accuracy
 from .command import S_UNIT, S_MODEL, DIM, S_MANAGE
 from .utils import *
 from .visitor import *
@@ -19,6 +24,13 @@ def get_cls(cls_name):
     Hàm trả về bộ dựng lớp của thư viện
     '''
     return getattr(brain, cls_name)
+
+def build_unit(cls_name, *args, **kwargs):
+    cls = get_cls(cls_name)
+    if not isinstance(cls, Unit):
+        raise ValueError("Không phải lớp kế thừa Unit")
+    unit = cls(dim = DIM, *args, **kwargs)
+    return unit
 
 def __save_unit(unit : Unit):
     save(S_UNIT + '/' + unit.name() + '.pt', unit)
@@ -53,10 +65,3 @@ def load_model(model : str) -> torch.nn.Module:
     if not isinstance(_model, Graph):
         raise ValueError("Không phải model")
     return _model
-
-def build_unit(cls_name, *args, **kwargs):
-    cls = get_cls(cls_name)
-    if not isinstance(cls, Unit):
-        raise ValueError("Không phải lớp kế thừa Unit")
-    unit = cls(dim = DIM, *args, **kwargs)
-    return unit

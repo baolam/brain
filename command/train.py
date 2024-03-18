@@ -26,6 +26,7 @@ def __load_from_file(file, args):
     if ext != "json":
         raise ValueError("Dạng file mở rộng không được chấp nhận!")
     data = json.load(file)
+    
     args.epoch = data["epoch"]
     args.batch_size = data["batch_size"]
     args.model = data["model"]
@@ -36,6 +37,7 @@ def __load_from_file(file, args):
     args.accuracy = data["accuracy"]
     args.device = data["device"]
     args.callbacks = data["callbacks"]
+    
     return args
 
 def train(args):
