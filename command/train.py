@@ -1,6 +1,7 @@
-import os
 import json
+from typing import List, Tuple, Dict
 
+from torch.utils.data import DataLoader, Dataset
 from .. import load_model, get_cls
 from ..learn import Learning
 from . import parser
@@ -27,16 +28,26 @@ def __load_from_file(file, args):
     
     args.epoch = data["epoch"]
     args.batch_size = data["batch_size"]
+    args.valid_size = data["valid_size"]
+    args.dataset_folder = data["dataset_folder"]
+    # -----------------------------------------
     args.model = data["model"]
     args.loss = data["loss"]
     args.optimizer = data["optimizer"]
-    args.valid_size = data["valid_size"]
-    args.dataset_folder = data["dataset_folder"]
     args.accuracy = data["accuracy"]
     args.device = data["device"]
     args.callbacks = data["callbacks"]
     
     return args
+
+def __callbacks(callbacks : List[Tuple[str, Dict[str, str]]]):
+    out = []
+    for callback, kwargs in callbacks:
+        out.append(get_cls(callback)(**kwargs))
+    return out
+
+def __train(learn : Learning, args):
+    pass
 
 def train(args):
     if args.trainable:
@@ -50,6 +61,6 @@ def train(args):
             __build(tmp.loss), 
             __build(tmp.optimizer.cls, **tmp.optimizer), 
             __build(tmp.accuracy.cls, **tmp.accuracy), 
-            tmp.device, 
-            tmp.callbacks
+            __callbacks(tmp.callbacks),
+            device=tmp.device 
         )

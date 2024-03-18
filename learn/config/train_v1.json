@@ -4,14 +4,15 @@
     "loss" : "bceloss",
     "optimizer" : {
         "cls" : "adam",
-        "learning_rate" : 0.01
+        "lr" : 0.01
     },
     "dataset_folder" : "",
     "model" : "",
     "valid_size" : 0.2,
     "callbacks" : [],
     "accuracy" : {
-        "..."
+        "cls" : "MultiClass",
+        "num_classes" : 10
     },
     "device" : ""
 }
