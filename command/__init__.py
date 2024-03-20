@@ -3,7 +3,7 @@ import argparse
 from dotenv import load_dotenv
 
 parser = argparse.ArgumentParser()
-load_dotenv("E:\\my_research\\brain\\.env")
+load_dotenv("E:/my_research/brain/config/.env")
 
 VERSION = os.getenv("VERSION")
 DIM = int(os.getenv("DIM"))
