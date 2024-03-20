@@ -1,68 +1,70 @@
+import os
 import json
 
-from typing import List, Tuple, Dict
-from torch.utils.data import DataLoader, Dataset
-
 from . import parser
+DEFAULT = os.getenv("DEFAULT")
+
+from torch.utils.data import DataLoader, random_split
+from load_torch import get_cls_from_torch
+from root import load_model, get_cls
 from root import Learning
-from root import get_cls, load_model
 
-tmp = parser.add_argument_group(title="Huấn luyện mô hình", description="Các thông số/ cờ hiệu dùng để điều khiển quá trình huấn luyện")
-tmp.add_argument("--trainable", help="Cho phép huấn luyện mô hình", type=bool, default=False)
-tmp.add_argument("--batch_size", help="Kích thước của một bước huấn luyện", default=64, type=int)
-tmp.add_argument("--device", help="Thiết bị dùng để huấn luyện", type=str, default="cpu")
-tmp.add_argument("--epoch", help="Số bước huấn luyện", type=int)
-tmp.add_argument("--valid_size", help="Dùng để tách tỉ lệ dữ liệu huấn luyện", type=float, default=0.2)
-tmp.add_argument("--dataset_folder", help="Thư mục lưu trữ dữ liệu huấn luyện")
-tmp.add_argument("--train_file", help="File lưu trữ các thông tin huấn luyện", type=str, default=None)
-tmp.add_argument("--model", help="File chứa mô hình huấn luyện", type=str)
-tmp.add_argument("--transform_file", help="File dùng để chuyển đổi bộ dữ liệu", type=str)
+tmp = parser.add_argument_group(title="Nhóm lệnh dùng để huấn luyện mô hình", description="Sử dụng các cờ hiệu")
+tmp.add_argument('--trainable', type=bool, help="Cờ hiệu dùng để thông báo xảy ra quá trình huấn luyện", action="store")
+tmp.add_argument('--train_file', type=str, help="Đọc từ file cấu hình (các thông tin quy định quá trình đào tạo)", default=DEFAULT)
 
-def __build(cls, *args, **kwargs):
-    obj = get_cls(cls)(*args, **kwargs)
-    return obj
-
-def __load_from_file(file, args):
+def __check_file(file):
     ext = file.split('.')[1]
     if ext != "json":
-        raise ValueError("Dạng file mở rộng không được chấp nhận!")
-    data = json.load(file)
-    
-    args.epoch = data["epoch"]
-    args.batch_size = data["batch_size"]
-    args.valid_size = data["valid_size"]
-    args.dataset_folder = data["dataset_folder"]
-    # -----------------------------------------
-    args.model = data["model"]
-    args.loss = data["loss"]
-    args.optimizer = data["optimizer"]
-    args.accuracy = data["accuracy"]
-    args.device = data["device"]
-    args.callbacks = data["callbacks"]
-    
-    return args
+        raise ValueError("Đuôi file không được chấp nhận!")
+    dt = json.load(file)
+    return dt
 
-def __callbacks(callbacks : List[Tuple[str, Dict[str, str]]]):
-    out = []
-    for callback, kwargs in callbacks:
-        out.append(get_cls(callback)(**kwargs))
-    return out
+def __build_learn_object(cfg):
+    model = load_model(cfg["model"])
+    loss = get_cls_from_torch(cfg["loss"])
+    optimizer = get_cls_from_torch(cfg["optimizer"][0], 
+        model.parameters() ,**cfg["optimizer"][1])
+    accuracy = get_cls_from_torch(cfg["accuracy"][0], **cfg["accuracy"][1])
+    
+    callbacks = []
+    for name, kwargs in cfg["callbacks"]:
+        callbacks.append(
+            get_cls(name, **kwargs)
+        )
 
-def __train(learn : Learning, args):
-    pass
+    learning = Learning(model)
+    learning.set(loss, optimizer, accuracy, device=cfg["device"], callbacks=callbacks)
+
+    return learning
+
+def __build_training_data(cfg):
+    transforms = []
+    for name, kwargs in cfg["dataset"]["transforms"]:
+        transforms.append(
+            get_cls_from_torch(name, **kwargs)
+        )
+
+    dataset = get_cls_from_torch(cfg["dataset"][0], 
+        root=cfg["dataset"]["root"], transforms=transforms)
+    train_dataset, val_dataset = random_split(dataset, cfg["split_size"])
+    train_loader = DataLoader(train_dataset, **cfg["loader"]["train"])
+    val_loader = DataLoader(val_dataset, **cfg["loader"]["valid"])
+    return train_loader, val_loader
 
 def train(args):
     if args.trainable:
-        tmp = args
-        train_file = tmp.train_file
-        if not train_file is None:
-            tmp = __load_from_file(train_file, tmp)
-        model = load_model(tmp.model)
-        learning = Learning(model)
-        learning.set(
-            __build(tmp.loss), 
-            __build(tmp.optimizer.cls, **tmp.optimizer), 
-            __build(tmp.accuracy.cls, **tmp.accuracy), 
-            __callbacks(tmp.callbacks),
-            device=tmp.device 
-        )
+        train_file = args.train_file
+        if train_file == DEFAULT:
+            print("Không thể huấn luyện, do không có file config")
+            return
+        if os.path.exists(args["history_storage"]):
+            print("File dùng để lưu trữ lịch sử huấn luyện đã tồn tại!")
+            return
+        config = __check_file(train_file)
+        learning = __build_learn_object(config)
+        train_loader, val_loader = __build_training_data(config)
+
+        his = learning.learn(config["epochs"], train_loader, val_loader, show_progress=config["show_progress"])
+        with open(config["history_storage"], "w", encoding="utf-8") as f:
+            f.write(his)

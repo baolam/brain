@@ -1,15 +1,17 @@
+import os
+
 from typing import List, Tuple
 from tqdm import tqdm
 from torchmetrics import Accuracy
+
 from torch.utils.data import DataLoader
-from torch import nn, optim
+from torch import optim
+
 from .callback.Callback import Callback
 from .LearnGraph import LearnGraph
 
 
 class Learning():
-    NOT_INFOR = "..."
-
     def __init__(self, target : LearnGraph):
         self._target = target
         self._run_at = None
@@ -99,7 +101,7 @@ class Learning():
         self._target = self._target.train()
         for e in range(1, epochs + 1):
             train_loss, train_acc = self.train(train, show_progress)
-            val_loss, val_acc = self.NOT_INFOR, self.NOT_INFOR
+            val_loss, val_acc = os.getenv("NOT_EXIST"), os.getenv("NOT_EXIST")
             if not val is None:
                 val_loss, val_acc = self.valid(val)
             if show_progress:
@@ -107,7 +109,7 @@ class Learning():
             _tmp = (train_loss, train_acc, val_loss, val_acc)
             # Hàm gọi lại cho lưu trữ thông tin bổ sung
             for callback in self._callbacks:
-                callback(*_tmp, epoch=e)
+                callback(*_tmp, epoch=e, target=self._target)
             infor.append(_tmp)
         self._target = self._target.eval()
 

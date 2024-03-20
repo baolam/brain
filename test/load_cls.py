@@ -1,6 +1,7 @@
 import sys
-sys.path.append("../../")
+sys.path.append("../")
 
-import root
-bceloss = root.get_cls("BCELoss")
-adam = root.get_cls("Adam")
+import load_torch
+
+bceloss = load_torch.get_cls_from_torch("BCELoss")
+adam = load_torch.get_cls_from_torch("Adam")

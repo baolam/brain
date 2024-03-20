@@ -1,14 +1,10 @@
 import torch
-import torchmetrics
 
 import json
 from uuid import uuid4
 from torch import load, save
 from typing import Tuple
 
-from torch.nn import *
-from torch.optim import *
-from torchmetrics import Accuracy
 from command import S_UNIT, S_MODEL, DIM, S_MANAGE
 from utils import *
 from visitor import *
@@ -19,11 +15,11 @@ from learn import *
 import importlib
 brain = importlib.import_module("root")
 
-def get_cls(cls_name):
+def get_cls(cls_name, *args, **kwargs):
     '''
     Hàm trả về bộ dựng lớp của thư viện
     '''
-    return getattr(brain, cls_name)
+    return getattr(brain, cls_name)(*args, **kwargs)
 
 def build_unit(cls_name, *args, **kwargs):
     cls = get_cls(cls_name)

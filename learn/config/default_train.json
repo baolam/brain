@@ -1,0 +1,27 @@
+{
+    "model" : "",
+    "device" : "gpu",
+    "epoch" : 10,
+    "loss" : "bceloss",
+    "optimizer" : ["Adam", { "a" : 1, "b" : 2 }],
+    "accuracy" : ["MultiClass", { "opt1" : 1, "opt2" : 2 }],
+    "split_size" : [0.7, 0.3],
+    "dataset" : ["ImageFolder", {
+        "transforms" : ["", { }],
+        "root" : ""
+    }],
+    "loader" : {
+        "train" : {
+            "batch_size" : 64,
+            "shuffle" : true,
+            "pin_memory" : true
+        },
+        "valid" : {
+            "batch_size" : 64,
+            "shuffle" : true
+        }
+    },
+    "callbacks" : [],
+    "show_progress" : true,
+    "history_storage" : ""
+}
