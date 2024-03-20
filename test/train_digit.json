@@ -8,8 +8,8 @@
     "split_size" : [0.7, 0.3],
     "dataset" : ["MNIST", {
         "transform" : [
-            ["Normalize", { "mean" : [0.5], "std" : [0.5] }], 
-            ["ToTensor", {  }]
+            ["ToTensor", {  }],
+            ["Normalize", { "mean" : [0.5], "std" : [0.5] }]
         ],
         "root" : "E:/my_research/mnist",
         "other" : {

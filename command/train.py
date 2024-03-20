@@ -5,7 +5,7 @@ from . import parser
 DEFAULT = os.getenv("DEFAULT")
 
 from torch.utils.data import DataLoader, random_split
-from load_torch import get_cls_from_torch
+from load_torch import get_cls_from_torch, Compose
 from root import load_model, get_cls
 from root import Learning
 
@@ -45,6 +45,9 @@ def __build_training_data(cfg):
         _transform.append(
             get_cls_from_torch(name, **kwargs)
         )
+    
+    if len(_transform) > 0:
+        _transform = Compose(_transform)
 
     dataset = get_cls_from_torch(cfg["dataset"][0], 
         root=cfg["dataset"][1]["root"], transform=_transform, **cfg["dataset"][1]["other"])
