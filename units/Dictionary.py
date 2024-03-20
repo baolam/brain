@@ -1,8 +1,9 @@
 from typing import Dict, Tuple, List
 from torch import nn
+
 from .Unit import Unit
-from ..utils.address import SPLIT_CHAR
-from ..utils.array import NoDuplicateArray
+from utils.address import SPLIT_CHAR
+from utils.array import NoDuplicateArray
 
 
 class Dictionary(nn.Module):

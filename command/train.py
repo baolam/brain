@@ -1,10 +1,11 @@
 import json
-from typing import List, Tuple, Dict
 
+from typing import List, Tuple, Dict
 from torch.utils.data import DataLoader, Dataset
-from .. import load_model, get_cls
-from ..learn import Learning
+
 from . import parser
+from root import Learning
+from root import get_cls, load_model
 
 tmp = parser.add_argument_group(title="Huấn luyện mô hình", description="Các thông số/ cờ hiệu dùng để điều khiển quá trình huấn luyện")
 tmp.add_argument("--trainable", help="Cho phép huấn luyện mô hình", type=bool, default=False)
@@ -15,6 +16,7 @@ tmp.add_argument("--valid_size", help="Dùng để tách tỉ lệ dữ liệu h
 tmp.add_argument("--dataset_folder", help="Thư mục lưu trữ dữ liệu huấn luyện")
 tmp.add_argument("--train_file", help="File lưu trữ các thông tin huấn luyện", type=str, default=None)
 tmp.add_argument("--model", help="File chứa mô hình huấn luyện", type=str)
+tmp.add_argument("--transform_file", help="File dùng để chuyển đổi bộ dữ liệu", type=str)
 
 def __build(cls, *args, **kwargs):
     obj = get_cls(cls)(*args, **kwargs)

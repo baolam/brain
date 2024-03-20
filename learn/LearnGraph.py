@@ -1,10 +1,10 @@
 from typing import List, Tuple
 from torch import nn, no_grad
 
-from ..graph.Graph import Graph
-from ..units.Dictionary import Dictionary
-from ..units.Unit import Unit
-from ..graph.ForwardGraph import ForwardGraph
+from graph.Graph import Graph
+from units.Dictionary import Dictionary
+from units.Unit import Unit
+from graph.ForwardGraph import ForwardGraph
 
 
 class LearnGraph(ForwardGraph, nn.Module):

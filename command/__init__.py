@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 parser = argparse.ArgumentParser()
 # path = Path("E:\\my_research\\brain\\.env")
 # load_dotenv(path)
-load_dotenv()
+load_dotenv("E:\\my_research\\brain\\command\\.env")
 
 VERSION = os.getenv("VERSION")
 DIM = int(os.getenv("DIM"))

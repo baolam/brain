@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, Dict, List
 
-from ..units.Dictionary import Dictionary
-from ..utils.array import NoDuplicateArray
-from ..units.Unit import Unit
+from units.Dictionary import Dictionary
+from utils.array import NoDuplicateArray
+from units.Unit import Unit
 
 
 class Graph(ABC):

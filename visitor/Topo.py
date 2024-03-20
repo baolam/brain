@@ -1,5 +1,5 @@
 from typing import Dict
-from ..utils.array import NoDuplicateArray
+from utils.array import NoDuplicateArray
 
 
 class Topo:
