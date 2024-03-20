@@ -3,6 +3,7 @@ from command.infor import infor
 from command.unit import unit
 from command.train import train
 
+from root import *
 build_folder()
 
 args = parser.parse_args()

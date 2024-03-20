@@ -23,7 +23,8 @@ class Learning():
         self._callbacks : List[Callback] = []
 
     def set_optimizer(self, optimizer : optim.Optimizer, *args, **kwargs):
-        self._optimizer = optimizer(self._target.parameters(), *args, **kwargs)
+        # self._optimizer = optimizer(self._target.parameters(), *args, **kwargs)
+        self._optimizer = optimizer
     
     def set_device(self, _device : str = "cpu"):
         self._run_at = _device

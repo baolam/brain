@@ -17,7 +17,8 @@ def __check_file(file):
     ext = file.split('.')[1]
     if ext != "json":
         raise ValueError("Đuôi file không được chấp nhận!")
-    dt = json.load(file)
+    with open(file, "rb") as f:
+        dt = json.load(f)
     return dt
 
 def __build_learn_object(cfg):
@@ -39,14 +40,14 @@ def __build_learn_object(cfg):
     return learning
 
 def __build_training_data(cfg):
-    transforms = []
-    for name, kwargs in cfg["dataset"]["transforms"]:
-        transforms.append(
+    _transform = []
+    for name, kwargs in cfg["dataset"][1]["transform"]:
+        _transform.append(
             get_cls_from_torch(name, **kwargs)
         )
 
     dataset = get_cls_from_torch(cfg["dataset"][0], 
-        root=cfg["dataset"]["root"], transforms=transforms)
+        root=cfg["dataset"][1]["root"], transform=_transform, **cfg["dataset"][1]["other"])
     train_dataset, val_dataset = random_split(dataset, cfg["split_size"])
     train_loader = DataLoader(train_dataset, **cfg["loader"]["train"])
     val_loader = DataLoader(val_dataset, **cfg["loader"]["valid"])
@@ -58,13 +59,14 @@ def train(args):
         if train_file == DEFAULT:
             print("Không thể huấn luyện, do không có file config")
             return
-        if os.path.exists(args["history_storage"]):
-            print("File dùng để lưu trữ lịch sử huấn luyện đã tồn tại!")
-            return
         config = __check_file(train_file)
+        # if os.path.exists(config["history_storage"]):
+        #     print("File dùng để lưu trữ lịch sử huấn luyện đã tồn tại!")
+        #     return
+        
         learning = __build_learn_object(config)
         train_loader, val_loader = __build_training_data(config)
 
-        his = learning.learn(config["epochs"], train_loader, val_loader, show_progress=config["show_progress"])
+        his = learning.learn(config["epoch"], train_loader, val_loader, show_progress=config["show_progress"])
         with open(config["history_storage"], "w", encoding="utf-8") as f:
             f.write(his)

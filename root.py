@@ -2,7 +2,7 @@ import torch
 
 import json
 from uuid import uuid4
-from torch import load, save
+from torch import load as load_torch, save as save_torch
 from typing import Tuple
 
 from command import S_UNIT, S_MODEL, DIM, S_MANAGE
@@ -29,7 +29,7 @@ def build_unit(cls_name, *args, **kwargs):
     return unit
 
 def __save_unit(unit : Unit):
-    save(S_UNIT + '/' + unit.name() + '.pt', unit)
+    save_torch(unit, S_UNIT + '/' + unit.name() + '.pt')
 
 def __save_graph(graph : Graph, name : str):
     edges = graph.edges()
@@ -43,21 +43,21 @@ def __save_graph(graph : Graph, name : str):
 def __save_model(model : Graph, name : str):
     if name is None:
         name = str(uuid4())
-    save(S_MODEL + '/' + name + '.pt', model)
+    save_torch(model, S_MODEL + '/' + name + '.pt')
     for unit_addr in model._units.address():
         __save_unit(model._units.get(unit_addr))
     __save_graph(model, name)
 
 def save(obj : Tuple[Unit, Graph], name : str = None):
-    if isinstance(obj, Unit):
+    if obj._is() == "unit":
         __save_unit(obj)
-    elif isinstance(obj, Graph):
+    elif obj._is() == "graph":
         __save_model(obj, name)
     else:
         raise ValueError("Không thể lưu trữ!")
 
 def load_model(model : str) -> torch.nn.Module:
-    _model = load(S_MODEL + '/' + model)
-    if not isinstance(_model, Graph):
-        raise ValueError("Không phải model")
+    _model = load_torch(S_MODEL + '/' + model + '.pt')
+    # if not isinstance(_model, Graph):
+    #     raise ValueError("Không phải model")
     return _model

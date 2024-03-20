@@ -1,7 +1,10 @@
 import sys
+from typing import Tuple
 sys.path.append("../")
 
-from root import build_unit
-from root import Dictionary
+from root import DigitUnit
+from root import save
 
-u1 = build_unit("")
+
+digit_model = DigitUnit(784, 10)
+save(digit_model)

@@ -66,3 +66,6 @@ class Graph(ABC):
     @abstractmethod
     def forward(self):
         pass
+
+    def _is(self):
+        return "graph"

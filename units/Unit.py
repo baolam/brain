@@ -84,3 +84,6 @@ class Unit(ABC, nn.Module):
     @abstractmethod
     def clear_feature(self, *args, **kwargs):
         pass
+
+    def _is(self):
+        return "unit"
