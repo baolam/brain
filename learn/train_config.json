@@ -1,14 +1,20 @@
 {
-    "model" : "",
-    "device" : "gpu",
+    "model" : "1$14bfe2e5-a83e-4945-bee6-aa53bf72a8ad",
+    "device" : "cuda",
     "epoch" : 10,
-    "loss" : "bceloss",
-    "optimizer" : ["Adam", { "a" : 1, "b" : 2 }],
-    "accuracy" : ["MultiClass", { "opt1" : 1, "opt2" : 2 }],
+    "loss" : "BCELoss",
+    "optimizer" : ["Adam", [] ,{ "lr" : 0.01 }],
+    "accuracy" : ["Accuracy", [] ,{ "task" : "multiclass" ,"num_classes" : 10 }],
     "split_size" : [0.7, 0.3],
-    "dataset" : ["ImageFolder", {
-        "transforms" : ["", { }],
-        "root" : ""
+    "dataset" : ["MNIST", {
+        "transform" : [
+            ["ToTensor", [] ,{  }],
+            ["Normalize", [] ,{ "mean" : [0.5], "std" : [0.5] }]
+        ],
+        "root" : "E:/my_research/mnist",
+        "other" : {
+            "download" : true
+        }
     }],
     "loader" : {
         "train" : {
@@ -23,5 +29,5 @@
     },
     "callbacks" : [],
     "show_progress" : true,
-    "history_storage" : ""
+    "history_storage" : "E:/my_research/train"
 }

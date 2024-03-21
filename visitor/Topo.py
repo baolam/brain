@@ -11,7 +11,7 @@ class Topo:
     def initalize(self):
         for edge, __ in self.__edges.items():
             self.__visited[edge] = False
-    
+
     def __dfs(self, addr):
         self.__visited[addr] = True
 
@@ -22,6 +22,7 @@ class Topo:
         self.__topo.append(addr)
 
     def visit(self):
+        self.initalize()
         for addr in self.__edges.keys():
             if not self.__visited[addr]:
                 self.__dfs(addr)

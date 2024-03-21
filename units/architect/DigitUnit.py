@@ -30,5 +30,6 @@ class DigitUnit(Unit):
     def clear_feature(self, *args, **kwargs):
         pass
 
-    def forward(self, x ,*args, **kwargs) -> Tensor:
+    def forward(self, x : Tensor,*args, **kwargs) -> Tensor:
+        x = x.reshape((x.size()[0], -1))
         return self.ff(x)

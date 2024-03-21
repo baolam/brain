@@ -7,15 +7,15 @@ from utils.array import NoDuplicateArray
 
 
 class Dictionary(nn.Module):
-    def __init__(self, units : Dict[str, Unit]):
+    def __init__(self, units : Dict[str, Unit] = None):
         '''
         Khởi tạo của Dictionary. Đóng vai trò quản lí các unit.
         Là một tập hợp bao gồm các Unit.
         '''
         super().__init__()
-        self.__lock = False
+        self.__lock = True
         if units is None:
-            self.__lock = True
+            self.__lock = False
 
         self.__units : Dict[str, Unit] = nn.ModuleDict(units)
     
@@ -89,7 +89,7 @@ class Dictionary(nn.Module):
         '''
         Trả về toàn bộ địa chỉ của các unit được sắp xếp theo thứ tự tăng dần
         '''
-        return list(self.__units.keys()).sort()
+        return sorted(list(self.__units.keys()))
 
     def layers(self) -> Dict[str, NoDuplicateArray]:
         '''

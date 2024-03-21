@@ -58,6 +58,6 @@ def save(obj : Tuple[Unit, Graph], name : str = None):
 
 def load_model(model : str) -> torch.nn.Module:
     _model = load_torch(S_MODEL + '/' + model + '.pt')
-    # if not isinstance(_model, Graph):
+    # if _model._is() != "graph":
     #     raise ValueError("Không phải model")
     return _model

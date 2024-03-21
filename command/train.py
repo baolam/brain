@@ -25,8 +25,8 @@ def __build_learn_object(cfg):
     model = load_model(cfg["model"])
     loss = get_cls_from_torch(cfg["loss"])
     optimizer = get_cls_from_torch(cfg["optimizer"][0], 
-        model.parameters() ,**cfg["optimizer"][1])
-    accuracy = get_cls_from_torch(cfg["accuracy"][0], **cfg["accuracy"][1])
+        model.parameters(), *cfg["optimizer"][1], **cfg["optimizer"][2])
+    accuracy = get_cls_from_torch(cfg["accuracy"][0], *cfg["accuracy"][1], **cfg["accuracy"][2])
     
     callbacks = []
     for name, kwargs in cfg["callbacks"]:
@@ -41,9 +41,9 @@ def __build_learn_object(cfg):
 
 def __build_training_data(cfg):
     _transform = []
-    for name, kwargs in cfg["dataset"][1]["transform"]:
+    for name, args ,kwargs in cfg["dataset"][1]["transform"]:
         _transform.append(
-            get_cls_from_torch(name, **kwargs)
+            get_cls_from_torch(name, *args ,**kwargs)
         )
     
     if len(_transform) > 0:
@@ -54,6 +54,7 @@ def __build_training_data(cfg):
     train_dataset, val_dataset = random_split(dataset, cfg["split_size"])
     train_loader = DataLoader(train_dataset, **cfg["loader"]["train"])
     val_loader = DataLoader(val_dataset, **cfg["loader"]["valid"])
+    
     return train_loader, val_loader
 
 def train(args):

@@ -1,15 +1,15 @@
 {
-    "model" : "1$00b75d7b-1d5a-4ab3-9d4e-0aacf94daa21",
+    "model" : "1$14bfe2e5-a83e-4945-bee6-aa53bf72a8ad",
     "device" : "cuda",
     "epoch" : 10,
-    "loss" : "BCELoss",
-    "optimizer" : ["Adam", { "lr" : 0.01 }],
-    "accuracy" : ["Accuracy", { "task" : "multiclass" ,"num_classes" : 10 }],
+    "loss" : "CrossEntropyLoss",
+    "optimizer" : ["Adam", [] ,{ "lr" : 0.01 }],
+    "accuracy" : ["Accuracy", [] ,{ "task" : "multiclass" ,"num_classes" : 10 }],
     "split_size" : [0.7, 0.3],
     "dataset" : ["MNIST", {
         "transform" : [
-            ["ToTensor", {  }],
-            ["Normalize", { "mean" : [0.5], "std" : [0.5] }]
+            ["ToTensor", [] ,{  }],
+            ["Normalize", [] ,{ "mean" : [0.5], "std" : [0.5] }]
         ],
         "root" : "E:/my_research/mnist",
         "other" : {

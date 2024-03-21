@@ -13,9 +13,8 @@ class Graph(ABC):
         if dictionary is None:
             dictionary = Dictionary()
         self._units = dictionary
-        self.__initalize()
-
         self._edges : Dict[str, NoDuplicateArray] = { }
+        self.__initalize()
 
     def __initalize(self):
         for name in self._units.address():
