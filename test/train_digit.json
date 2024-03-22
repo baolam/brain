@@ -28,6 +28,6 @@
         }
     },
     "callbacks" : [],
-    "show_progress" : true,
-    "history_storage" : "E:/my_research/train"
+    "show_progress" : false,
+    "history_storage" : "E:/my_research/train/digit.txt"
 }

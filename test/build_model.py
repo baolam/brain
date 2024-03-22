@@ -13,4 +13,5 @@ dic = Dictionary()
 dic.add(digit_model)
 fg = ForwardGraph(dic)
 fg.initalize()
-print(fg)
+
+save(fg, "digit")

@@ -100,11 +100,7 @@ class Learning():
     def learn(self, epochs : int, train : DataLoader, 
         val : DataLoader = None, show_progress : bool = True):
         self.show_infor()
-        if show_progress:
-            print("Cho phép hiển thị tiến trình huấn luyện!")
-        else:
-            print("Không cho phép hiển thị tiến trình huấn luyện!")
-
+        
         infor = []
 
         self._target = self._target.train()
@@ -128,9 +124,12 @@ class Learning():
         print("Thông tin cơ bản về đào tạo mô hình")
         print("Kiến trúc mô hình")
         print(self._target)
+        print()
         print("-----------------------------------")
         print("Quá trình đào tạo được thực hiện trên thiết bị: {}".format(self._run_at))
         print("Tổng số thông số của mô hình là: {}".format(self._target.total_params()))
         print("Tổng số thông số huấn luyện là: {}".format(self._target.train_params()))
         print("Tối ưu dựa trên thuật toán : {}".format(str(self._optimizer.__class__.__name__)))
         print("Hàm lỗi : {}".format(str(self._loss.__class__.__name__)))
+        print("-----------------------------------")
+        print()
