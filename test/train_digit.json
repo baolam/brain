@@ -1,7 +1,7 @@
 {
     "model" : "digit",
     "device" : "cuda",
-    "epoch" : 10,
+    "epoch" : 1,
     "loss" : "CrossEntropyLoss",
     "optimizer" : ["Adam", [] ,{ "lr" : 0.01 }],
     "accuracy" : ["Accuracy", [] ,{ "task" : "multiclass" ,"num_classes" : 10 }],
@@ -28,6 +28,7 @@
         }
     },
     "callbacks" : [],
-    "show_progress" : false,
-    "history_storage" : "E:/my_research/train/digit.txt"
+    "show_progress" : true,
+    "history_storage" : "E:/my_research/train/digit.txt",
+    "save" : "overriding"
 }

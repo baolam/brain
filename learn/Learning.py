@@ -63,7 +63,7 @@ class Learning():
             loss += self.__optimize(y, y_hat)
 
             if not self._accuracy is None:
-                acc += self._accuracy(y_hat, y)
+                acc += self._accuracy(y_hat, y).item()
 
         return loss / len(train), acc / len(train)
 
@@ -79,7 +79,7 @@ class Learning():
             loss += self._loss(y_hat, y).item()
 
             if not self._accuracy is None:
-                acc += self._accuracy(y_hat, y)
+                acc += self._accuracy(y_hat, y).item()
 
         return loss / len(val), acc / len(val)
     

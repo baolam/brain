@@ -1,12 +1,13 @@
 import os
 import json
 
+from typing import List, Tuple
 from . import parser
 DEFAULT = os.getenv("DEFAULT")
 
 from torch.utils.data import DataLoader, random_split
 from load_torch import get_cls_from_torch, Compose
-from root import load_model, get_cls
+from root import load_model, get_cls, save, save_torch
 from root import Learning
 
 tmp = parser.add_argument_group(title="Nhóm lệnh dùng để huấn luyện mô hình", description="Sử dụng các cờ hiệu")
@@ -22,9 +23,6 @@ def __check_file(file):
     return dt
 
 def __build_learn_object(cfg):
-    # model = __build_learning_graph(
-    #     load_model(cfg["model"])
-    # )
     model = load_model(cfg["model"])
     loss = get_cls_from_torch(cfg["loss"])
     optimizer = get_cls_from_torch(cfg["optimizer"][0], 
@@ -32,9 +30,9 @@ def __build_learn_object(cfg):
     accuracy = get_cls_from_torch(cfg["accuracy"][0], *cfg["accuracy"][1], **cfg["accuracy"][2])
     
     callbacks = []
-    for name, kwargs in cfg["callbacks"]:
+    for name, args ,kwargs in cfg["callbacks"]:
         callbacks.append(
-            get_cls(name, **kwargs)
+            get_cls(name, *args ,**kwargs)
         )
 
     learning = Learning(model)
@@ -60,6 +58,28 @@ def __build_training_data(cfg):
     
     return train_loader, val_loader
 
+def __check_history_file(file : str):
+    f = open(file, "w", encoding="utf-8")
+    f.close()
+
+def __process_his(his : List[Tuple[float, float, float, float]]):
+    cont = ""
+    for n1, n2, n3, n4 in his:
+        tmp = str(n1) + ',' + str(n2) + ',' + str(n3) + ',' + str(n4) + '\n'
+        cont = cont + tmp
+    return cont
+
+def __save_model(model, config):
+    # Lưu trữ file 
+    # (Cập nhật vào cơ sở)
+    # (Không cập nhật vào cơ sở)
+    _file = config["save"]
+    if _file == "overriding":
+        _file = config["model"]
+        save(model, _file)
+    else:
+        save_torch(_file)    
+
 def train(args):
     if args.trainable:
         train_file = args.train_file
@@ -67,13 +87,13 @@ def train(args):
             print("Không thể huấn luyện, do không có file config")
             return
         config = __check_file(train_file)
-        # if os.path.exists(config["history_storage"]):
-        #     print("File dùng để lưu trữ lịch sử huấn luyện đã tồn tại!")
-        #     return
+        __check_history_file(config["history_storage"])
         
         learning = __build_learn_object(config)
         train_loader, val_loader = __build_training_data(config)
 
         his = learning.learn(config["epoch"], train_loader, val_loader, show_progress=config["show_progress"])
         with open(config["history_storage"], "w", encoding="utf-8") as f:
-            f.write(his)
+            f.write(__process_his(his))
+        
+        __save_model(learning._target, config)

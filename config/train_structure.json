@@ -1,8 +1,8 @@
 {
-    "model" : "1$14bfe2e5-a83e-4945-bee6-aa53bf72a8ad",
+    "model" : "digit",
     "device" : "cuda",
     "epoch" : 10,
-    "loss" : "BCELoss",
+    "loss" : "CrossEntropyLoss",
     "optimizer" : ["Adam", [] ,{ "lr" : 0.01 }],
     "accuracy" : ["Accuracy", [] ,{ "task" : "multiclass" ,"num_classes" : 10 }],
     "split_size" : [0.7, 0.3],
@@ -24,10 +24,10 @@
         },
         "valid" : {
             "batch_size" : 64,
-            "shuffle" : true
+            "shuffle" : false
         }
     },
     "callbacks" : [],
     "show_progress" : false,
-    "history_storage" : "E:/my_research/train/history.txt"
+    "history_storage" : "E:/my_research/train/digit.txt"
 }
