@@ -38,7 +38,9 @@ def __save_graph(graph : Graph, name : str):
         "edges" : edges,
         "class_name" : cls
     }
-    json.dump(infor, S_MANAGE + '/' + name + '.json')    
+    fname = S_MANAGE + '/' + name + '.json'
+    with open(fname, "w") as f:
+        json.dump(infor, f)    
 
 def __save_model(model : Graph, name : str):
     if name is None:
@@ -58,6 +60,6 @@ def save(obj : Tuple[Unit, Graph], name : str = None):
 
 def load_model(model : str) -> torch.nn.Module:
     _model = load_torch(S_MODEL + '/' + model + '.pt')
-    # if _model._is() != "graph":
-    #     raise ValueError("Không phải model")
+    if _model._is() != "graph":
+        raise ValueError("Không phải model")
     return _model

@@ -1,5 +1,6 @@
 from typing import List, Tuple
-from torch import nn, stack
+from torch import nn, stack, Tensor, no_grad
+
 from units.Unit import Unit
 from units.Dictionary import Dictionary
 from visitor.Topo import Topo
@@ -10,11 +11,13 @@ class ForwardGraph(Graph):
     def __init__(self, dictionary: Dictionary = None, 
         edges : List[Tuple[Graph.UNIT_TYPE, Graph.UNIT_TYPE]] = None):
         super().__init__(dictionary)
+        self.__lock_initalize = False
         self.__order : List[Unit] = nn.ModuleList()
         self.__output_size = 0
-        self.initalize(edges)
+        if not edges is None:
+            self.initalize(edges)
 
-    def _build_topo(self):
+    def __build_topo(self):
         temp = Topo(self._edges)
         temp.visit()
         
@@ -33,13 +36,20 @@ class ForwardGraph(Graph):
         return outputs
 
     def initalize(self, edges = None):
+        if self.__lock_initalize:
+            raise ValueError("Chức năng này đã bị khóa!")
+        
+        if not self.__lock_initalize:
+            self.__lock_initalize = True
+            
         if not edges is None:
             for n1, n2 in edges:
                 self.add_edge(n1, n2)
 
-        topo = self._build_topo()
+        topo = self.__build_topo()
         outputs = self._outputs()
         self.__output_size = len(outputs)
+
         return topo, outputs
 
     def forward(self, x):
@@ -55,7 +65,7 @@ class ForwardGraph(Graph):
         output = []
         for unit in self.__order:
             tmp = unit(x)
-            neighbor = self.neighbor(unit)
+            neighbor = self.neighbor(unit.name())
 
             if len(neighbor) == 0:
                 if self.__output_size == 1:
@@ -67,3 +77,29 @@ class ForwardGraph(Graph):
                     self._units.get(neigh).recv(tmp)
 
         return stack(output).transpose(0, 1)
+    
+    def forward_no_grad(self, x):
+        with no_grad():
+            return self.forward(x)
+        
+    def __call__(self, x) -> Tensor:
+        return self.forward(x)
+    
+    def total_params(self):
+        params = 0
+        for unit in self._units.alls():
+            params += unit.total_params()
+        return params
+    
+    def train_params(self):
+        params = 0
+        for unit in self._units.alls():
+            params += unit.train_params()
+        return params
+    
+
+    def learnable(self):
+        learnable = {  }
+        for unit in self._units.alls():
+            learnable[unit.name()] = unit.learnable()
+        return learnable

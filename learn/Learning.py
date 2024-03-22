@@ -8,11 +8,10 @@ from torch.utils.data import DataLoader
 from torch import optim
 
 from .callback.Callback import Callback
-from .LearnGraph import LearnGraph
-
+from graph.ForwardGraph import ForwardGraph
 
 class Learning():
-    def __init__(self, target : LearnGraph):
+    def __init__(self, target : ForwardGraph):
         self._target = target
         self._run_at = None
         self._optimizer : optim.Optimizer = None
@@ -89,13 +88,22 @@ class Learning():
         return self.valid(test)
 
     def show_epoch(self, e : int, train_infor : Tuple[float, float], val_infor : Tuple[float, float] = None):
-        print("Epoch : {}. Train_loss : {}. Train_acc : {}. Val_loss : {}. Val_acc : {}".format(
-            e, train_infor[0], train_infor[1], val_infor[0], val_infor[1]
+        if isinstance(train_infor[1], str):
+            train_infor[1] = 0.
+        if isinstance(val_infor[1], str):
+            val_infor[1] = 0.
+
+        print("Epoch : {}. Train_loss : {}. Train_acc : {:.2f}%. Val_loss : {}. Val_acc : {:.2f}%".format(
+            e, train_infor[0], train_infor[1] * 100, val_infor[0], val_infor[1] * 100
         ))
 
     def learn(self, epochs : int, train : DataLoader, 
         val : DataLoader = None, show_progress : bool = True):
         self.show_infor()
+        if show_progress:
+            print("Cho phép hiển thị tiến trình huấn luyện!")
+        else:
+            print("Không cho phép hiển thị tiến trình huấn luyện!")
 
         infor = []
 
@@ -104,7 +112,7 @@ class Learning():
             train_loss, train_acc = self.train(train, show_progress)
             val_loss, val_acc = os.getenv("NOT_EXIST"), os.getenv("NOT_EXIST")
             if not val is None:
-                val_loss, val_acc = self.valid(val)
+                val_loss, val_acc = self.valid(val, show_progress)
             if show_progress:
                 self.show_epoch(e, (train_loss, train_acc), (val_loss, val_acc))
             _tmp = (train_loss, train_acc, val_loss, val_acc)
@@ -118,6 +126,8 @@ class Learning():
 
     def show_infor(self):
         print("Thông tin cơ bản về đào tạo mô hình")
+        print("Kiến trúc mô hình")
+        print(self._target)
         print("-----------------------------------")
         print("Quá trình đào tạo được thực hiện trên thiết bị: {}".format(self._run_at))
         print("Tổng số thông số của mô hình là: {}".format(self._target.total_params()))

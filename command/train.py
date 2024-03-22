@@ -14,7 +14,7 @@ tmp.add_argument('--trainable', type=bool, help="Cờ hiệu dùng để thông 
 tmp.add_argument('--train_file', type=str, help="Đọc từ file cấu hình (các thông tin quy định quá trình đào tạo)", default=DEFAULT)
 
 def __check_file(file):
-    ext = file.split('.')[1]
+    ext = file.split('.')[-1]
     if ext != "json":
         raise ValueError("Đuôi file không được chấp nhận!")
     with open(file, "rb") as f:
@@ -22,6 +22,9 @@ def __check_file(file):
     return dt
 
 def __build_learn_object(cfg):
+    # model = __build_learning_graph(
+    #     load_model(cfg["model"])
+    # )
     model = load_model(cfg["model"])
     loss = get_cls_from_torch(cfg["loss"])
     optimizer = get_cls_from_torch(cfg["optimizer"][0], 

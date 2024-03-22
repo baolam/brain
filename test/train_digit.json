@@ -1,5 +1,5 @@
 {
-    "model" : "1$14bfe2e5-a83e-4945-bee6-aa53bf72a8ad",
+    "model" : "digit",
     "device" : "cuda",
     "epoch" : 10,
     "loss" : "CrossEntropyLoss",
@@ -20,11 +20,11 @@
         "train" : {
             "batch_size" : 64,
             "shuffle" : true,
-            "pin_memory" : true
+            "pin_memory" : false
         },
         "valid" : {
             "batch_size" : 64,
-            "shuffle" : true
+            "shuffle" : false
         }
     },
     "callbacks" : [],

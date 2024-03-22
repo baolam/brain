@@ -1,15 +1,17 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, Dict, List
+from torch import nn
 
 from units.Dictionary import Dictionary
 from utils.array import NoDuplicateArray
 from units.Unit import Unit
 
 
-class Graph(ABC):
+class Graph(ABC, nn.Module):
     UNIT_TYPE = Tuple[str, Tuple[int, Unit]]
 
     def __init__(self, dictionary : Dictionary = None):
+        super().__init__()
         if dictionary is None:
             dictionary = Dictionary()
         self._units = dictionary

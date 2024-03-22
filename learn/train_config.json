@@ -20,7 +20,7 @@
         "train" : {
             "batch_size" : 64,
             "shuffle" : true,
-            "pin_memory" : true
+            "pin_memory" : false
         },
         "valid" : {
             "batch_size" : 64,
@@ -28,6 +28,6 @@
         }
     },
     "callbacks" : [],
-    "show_progress" : true,
-    "history_storage" : "E:/my_research/train"
+    "show_progress" : false,
+    "history_storage" : "E:/my_research/train/history.txt"
 }
