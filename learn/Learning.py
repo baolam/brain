@@ -58,6 +58,8 @@ class Learning():
             train = tqdm(train)
 
         for x, y in train:
+            self._target.clear()
+
             x, y = x.to(self._run_at), y.to(self._run_at)
             y_hat = self._target.forward(x)
             loss += self.__optimize(y, y_hat)
@@ -74,6 +76,8 @@ class Learning():
         if show_progress:
             val = tqdm(val)
         for x, y in val:
+            self._target.clear()
+            
             x, y = x.to(self._run_at), y.to(self._run_at)
             y_hat = self._target.forward_no_grad(x)
             loss += self._loss(y_hat, y).item()

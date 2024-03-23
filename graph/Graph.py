@@ -70,3 +70,13 @@ class Graph(ABC, nn.Module):
 
     def _is(self):
         return "graph"
+    
+    def units_by_layer(self, layer : str, return_addr : bool = False) -> List[Tuple[Unit | str]]:
+        out = []
+        for unit in self._units.alls():
+            if unit.layer() == layer:
+                if return_addr:
+                    out.append(unit.name())
+                else:
+                    out.append(unit)
+        return out

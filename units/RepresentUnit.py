@@ -24,6 +24,9 @@ class AutoRepresent(Unit):
     def clear_feature(self, *args, **kwargs):
         pass
 
+    def set_layer(self, layer):
+        pass
+
 
 class CodingRepresent(Unit, ABC):
     LAYER = "represent"
@@ -37,4 +40,7 @@ class CodingRepresent(Unit, ABC):
         '''
         Bộ phận hình thành nên đặc trưng (background substractor, ...)
         '''
+        pass
+
+    def set_layer(self, layer):
         pass

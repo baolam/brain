@@ -74,7 +74,7 @@ class ForwardGraph(Graph):
                     output.append(tmp)
             else:
                 for neigh in neighbor:
-                    self._units.get(neigh).recv(tmp)
+                    self._units.get(neigh).recv(tmp, unit.name())
 
         return stack(output).transpose(0, 1)
     
@@ -103,3 +103,10 @@ class ForwardGraph(Graph):
         for unit in self._units.alls():
             learnable[unit.name()] = unit.learnable()
         return learnable
+    
+    def clear(self):
+        '''
+        Dọn bộ nhớ, chuẩn bị cho bước lan truyền mới
+        '''
+        for unit in self._units.alls():
+            unit.clear_feature()
