@@ -5,15 +5,15 @@ from uuid import uuid4
 from torch import load as load_torch, save as save_torch
 from typing import Tuple
 
-from command import S_UNIT, S_MODEL, DIM, S_MANAGE
-from utils import *
-from visitor import *
-from units import *
-from graph import *
-from learn import *
+from .command import S_UNIT, S_MODEL, DIM, S_MANAGE
+from .utils import *
+from .visitor import *
+from .units import *
+from .graph import *
+from .learn import *
 
 import importlib
-brain = importlib.import_module("root")
+brain = importlib.import_module("brain")
 
 def get_cls(cls_name, *args, **kwargs):
     '''

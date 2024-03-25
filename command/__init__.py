@@ -24,3 +24,7 @@ def build_folder():
         os.makedirs(S_MODEL)
     if not os.path.exists(S_MANAGE):
         os.makedirs(S_MANAGE)
+
+# from .infor import infor
+# from .train import train
+# from .unit import unit

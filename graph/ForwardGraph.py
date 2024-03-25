@@ -1,9 +1,9 @@
 from typing import List, Tuple
 from torch import nn, stack, Tensor, no_grad
 
-from units.Unit import Unit
-from units.Dictionary import Dictionary
-from visitor.Topo import Topo
+from ..units.Unit import Unit
+from ..units.Dictionary import Dictionary
+from ..visitor.Topo import Topo
 from .Graph import Graph
 
 

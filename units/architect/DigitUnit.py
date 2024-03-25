@@ -3,7 +3,7 @@ from typing import Tuple
 from torch import Tensor
 from torch import nn
 from .. import Unit
-from root import get
+from ...root import get
 
 class DigitUnit(Unit):
     def __init__(self, inp_dim : int, out_dim : int, 

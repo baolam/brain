@@ -1,8 +1,8 @@
 from typing import List, Tuple, Dict
 from torch import Tensor, tensor
-from units.Unit import Unit
-from units.Dictionary import Dictionary
-from units.RepresentUnit import AutoRepresent
+from ..units.Unit import Unit
+from ..units.Dictionary import Dictionary
+from ..units.RepresentUnit import AutoRepresent
 from .ForwardGraph import ForwardGraph
 
 

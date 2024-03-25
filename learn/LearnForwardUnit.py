@@ -1,5 +1,5 @@
 from typing import List
-from graph.ForwardGraph import ForwardGraph, Graph
+from ..graph.ForwardGraph import ForwardGraph, Graph
 from .Learning import Learning
 
 

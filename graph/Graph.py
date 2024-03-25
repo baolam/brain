@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from typing import Tuple, Dict, List
 from torch import nn
 
-from units.Dictionary import Dictionary
-from utils.array import NoDuplicateArray
-from units.Unit import Unit
+from ..units.Dictionary import Dictionary
+from ..utils.array import NoDuplicateArray
+from ..units.Unit import Unit
 
 
 class Graph(ABC, nn.Module):

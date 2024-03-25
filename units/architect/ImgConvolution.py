@@ -1,7 +1,7 @@
 from torch import Tensor, nn
 from typing import Tuple
 from ..RepresentUnit import AutoRepresent
-from utils.address import get
+from ...utils.address import get
 
 
 class DefaultImgConv(AutoRepresent):

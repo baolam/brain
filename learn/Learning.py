@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from torch import optim
 
 from .callback.Callback import Callback
-from graph.ForwardGraph import ForwardGraph
+from ..graph.ForwardGraph import ForwardGraph
 
 class Learning():
     def __init__(self, target : ForwardGraph):

@@ -6,9 +6,9 @@ from . import parser
 DEFAULT = os.getenv("DEFAULT")
 
 from torch.utils.data import DataLoader, random_split
-from load_torch import get_cls_from_torch, Compose
-from root import load_model, get_cls, save, save_torch
-from root import Learning
+from ..load_torch import get_cls_from_torch, Compose
+from ..root import load_model, get_cls, save, save_torch
+from ..root import Learning
 
 tmp = parser.add_argument_group(title="Nhóm lệnh dùng để huấn luyện mô hình", description="Sử dụng các cờ hiệu")
 tmp.add_argument('--trainable', type=bool, help="Cờ hiệu dùng để thông báo xảy ra quá trình huấn luyện", action="store")
